@@ -2,7 +2,7 @@
 
 julia_version = "1.11.2"
 manifest_format = "2.0"
-project_hash = "62e278ea078127aeb13e92f9d6750726d532a03c"
+project_hash = "76871ca97a2c6147214e1efd3a04fa914322bf5d"
 
 [[deps.AbstractTrees]]
 git-tree-sha1 = "2d9c9a55f9c93e8887ad391fbae72f8ef55e1177"
@@ -31,6 +31,12 @@ version = "2.2.0"
 [[deps.Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 version = "1.11.0"
+
+[[deps.Clingo_jll]]
+deps = ["Artifacts", "JLLWrappers", "Libdl"]
+git-tree-sha1 = "daeebbde7f084416d3ec585b5d23a1590b3a87ce"
+uuid = "e1d4ad0e-dc8b-5d2d-8155-e9a55b531f08"
+version = "5.7.1+0"
 
 [[deps.CodeTracking]]
 deps = ["InteractiveUtils", "UUIDs"]
@@ -132,12 +138,10 @@ deps = ["DataStructures", "DocStringExtensions", "HerbCore", "HerbGrammar", "MLS
 git-tree-sha1 = "34b9fcaed3002fbdc58246bc7d55e83f1bc7a13a"
 uuid = "1fa96474-3206-4513-b4fa-23913f296dfc"
 version = "1.1.1"
+weakdeps = ["Clingo_jll"]
 
     [deps.HerbConstraints.extensions]
     ASPExt = "Clingo_jll"
-
-    [deps.HerbConstraints.weakdeps]
-    Clingo_jll = "e1d4ad0e-dc8b-5d2d-8155-e9a55b531f08"
 
 [[deps.HerbCore]]
 deps = ["AbstractTrees", "MacroTools", "StyledStrings"]
@@ -189,6 +193,12 @@ version = "1.11.0"
 git-tree-sha1 = "b2d91fe939cae05960e760110b328288867b5758"
 uuid = "92d709cd-6900-40b7-9082-c6be49f344b6"
 version = "0.2.6"
+
+[[deps.JLLWrappers]]
+deps = ["Artifacts", "Preferences"]
+git-tree-sha1 = "0533e564aae234aff59ab625543145446d8b6ec2"
+uuid = "692b3bcd-3c85-4b1f-b108-f13ce0eb3210"
+version = "1.7.1"
 
 [[deps.JSON]]
 deps = ["Dates", "Mmap", "Parsers", "Unicode"]
