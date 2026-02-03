@@ -30,7 +30,7 @@ The following metrics are returned:
 
 =#
 
-function aulile_with_compression(
+function aulile_with_compression(;
     problem::Problem, 
     grammar::AbstractGrammar, 
     starting_symbol::Symbol,
@@ -50,4 +50,30 @@ function aulile_with_compression(
     # TODO run Aulile
 
     return nothing
+end
+
+function aulile_with_compression(;
+    benchmark_name::String,
+    problem_grammar_pairs::Vector{},
+    starting_symbol::Symbol,
+    amount_of_programs_compressed::Int,
+    compression_parameters::CompressionParameters,
+    aulile_parameters::AulileParameters,
+)
+    @show benchmark_name
+    # TODO: store results somewhere    
+
+    for (problem, grammar) in problem_grammar_pairs
+        @show aulile_with_compression(
+            problem = problem,
+            grammar = grammar,
+            starting_symbol = starting_symbol,
+            amount_of_programs_compressed = amount_of_programs_compressed,
+            compression_parameters = compression_parameters,
+            aulile_parameters = aulile_parameters,
+        )
+
+        # TODO save these
+    end
+
 end
