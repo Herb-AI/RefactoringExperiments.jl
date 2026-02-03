@@ -1,3 +1,6 @@
+name = "RefactoringExperiments"
+uuid = "0fbf8203-857b-4c6b-9279-f5863501e139"
+
 [deps]
 Clingo_jll = "e1d4ad0e-dc8b-5d2d-8155-e9a55b531f08"
 HerbBenchmarks = "eadf8b74-d38a-4b1a-a063-8d36e493d376"
