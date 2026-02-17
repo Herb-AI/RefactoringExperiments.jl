@@ -30,46 +30,44 @@ The following metrics are returned:
 
 =#
 
-function aulile_with_compression(;
+function _aulile_with_compression(;
     problem::Problem, 
     grammar::AbstractGrammar, 
     starting_symbol::Symbol,
-    amount_of_programs_compressed::Int,
-    compression_parameters::CompressionParameters,
-    aulile_parameters::AulileParameters,
+    aulile_parameters::AulileOptions,
 )
+    base_iterator_type = DepthBasedBottomUpIterator
 
-    base_iterator = BottomUpIterator(grammar, starting_symbol)
+    println("Run Aulile")
 
-    compression(programs::Vector{AbstractRuleNode}) = refactor_grammar(programs, grammar, 
-        k                     = compression_parameters.k,
-        max_compression_nodes = compression_parameters.max_compression_nodes, 
-        time_limit_sec        = compression_parameters.time_limit_sec, 
-        ASP_PATH              = compression_parameters.ASP_PATH)
+    stats = aulile(
+        problem,
+        base_iterator_type,
+        grammar,
+        starting_symbol,
+        opts=aulile_parameters,
+    )
 
-    # TODO run Aulile
+    @show stats
 
     return nothing
 end
 
 function aulile_with_compression(;
     benchmark_name::String,
-    problem_grammar_pairs::Vector{},
+    problems::Vector{},
+    grammar::AbstractGrammar,
     starting_symbol::Symbol,
-    amount_of_programs_compressed::Int,
-    compression_parameters::CompressionParameters,
-    aulile_parameters::AulileParameters,
+    aulile_parameters::AulileOptions,
 )
     @show benchmark_name
-    # TODO: store results somewhere    
+    # TODO: store results somewhere   
 
-    for (problem, grammar) in problem_grammar_pairs
-        @show aulile_with_compression(
+    for problem in problems
+        @show _aulile_with_compression(
             problem = problem,
             grammar = grammar,
             starting_symbol = starting_symbol,
-            amount_of_programs_compressed = amount_of_programs_compressed,
-            compression_parameters = compression_parameters,
             aulile_parameters = aulile_parameters,
         )
 

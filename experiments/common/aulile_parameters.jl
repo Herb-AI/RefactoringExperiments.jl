@@ -1,3 +1,0 @@
-struct AulileParameters
-
-end
