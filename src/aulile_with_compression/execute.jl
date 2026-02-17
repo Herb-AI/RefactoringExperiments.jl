@@ -1,8 +1,6 @@
 using HerbCore, HerbSearch, HerbGrammar, HerbBenchmarks, HerbSpecification
 using Clingo_jll, JSON
 
-include("experiment.jl")
-
 benchmark = HerbBenchmarks.Karel_2018
 
 aulile_with_compression(
@@ -12,16 +10,12 @@ aulile_with_compression(
     starting_symbol = :Block,
     aulile_parameters = AulileOptions(
             max_iterations        = 3,
-            max_depth             = 10,
+            max_depth             = 4,
             restart_iterator      = true,
-        compression = (ps, g; k) -> HerbSearch.compress_to_expressions(ps, g;
-            k                     = 1,
-            max_compression_nodes = 10, 
-            time_limit_sec        = 120),
         synth_opts = SynthOptions(
             num_returned_programs = 10,
-            max_enumerations      = typemax(Int),
-            max_time              = 1,
+            max_enumerations      = 1000,
+            # max_time              = 1,
             print_debug           = false,
             eval_opts = EvaluateOptions(
             aux                     = default_aux,
