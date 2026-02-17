@@ -163,7 +163,7 @@ version = "1.0.1"
 
 [[deps.HerbSearch]]
 deps = ["DataStructures", "DocStringExtensions", "HerbConstraints", "HerbCore", "HerbGrammar", "HerbInterpret", "HerbSpecification", "MLStyle", "Random", "StatsBase", "TimerOutputs"]
-git-tree-sha1 = "8c60bcb0f6c047ccc67177007e8a04e12eaaaa4e"
+git-tree-sha1 = "c72ff0ce57093015036480279cd6a29ed2bf19eb"
 repo-rev = "124-Aulile"
 repo-url = "https://github.com/Herb-AI/HerbSearch.jl.git"
 uuid = "3008d8e8-f9aa-438a-92ed-26e9c7b4829f"

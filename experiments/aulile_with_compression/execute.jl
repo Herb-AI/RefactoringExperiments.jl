@@ -11,7 +11,7 @@ aulile_with_compression(
     grammar  = benchmark.grammar_karel,
     starting_symbol = :Block,
     aulile_parameters = AulileOptions(
-            max_iterations        = 5,
+            max_iterations        = 3,
             max_depth             = 10,
             restart_iterator      = true,
         compression = (ps, g; k) -> HerbSearch.compress_to_expressions(ps, g;
@@ -21,7 +21,7 @@ aulile_with_compression(
         synth_opts = SynthOptions(
             num_returned_programs = 10,
             max_enumerations      = typemax(Int),
-            max_time              = 10,
+            max_time              = 1,
             print_debug           = false,
             eval_opts = EvaluateOptions(
             aux                     = default_aux,
