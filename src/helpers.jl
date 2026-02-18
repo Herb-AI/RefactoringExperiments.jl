@@ -1,8 +1,12 @@
-include("aulile_auxiliary_functions.jl")
-
-function print_stats(stats::SearchStats, best_value::Number)
+function print_stats(stats::AulileStats, best_value::Number)
     passed = !isnothing(stats.program) && stats.score <= best_value
     print(Int(passed), ", ", stats.iterations, ", ", stats.enumerations)
+    return passed
+end
+
+function print_stats(stats::SearchStats, best_value::Number)
+    passed = !isnothing(stats.programs) && length(stats.programs) > 0 && stats.score <= best_value
+    print(Int(passed), ", ", 1, ", ", stats.enumerations)
     return passed
 end
 
@@ -25,17 +29,29 @@ function run_benchmark_comparison(
 
         for (mode_idx, mode) in enumerate(modes)
             if mode == "regular"
-                stats = synth_with_aux(problem,
-                    BFSIterator(grammar, :Start, max_depth=max_depth), grammar, default_aux,
-                    Dict{Int64,AbstractRuleNode}(), typemax(Int), interpret=interpret,
-                    allow_evaluation_errors=true, max_enumerations=max_enumerations)
+                opts = SynthOptions(
+                    num_returned_programs=1,
+                    max_enumerations=max_enumerations,
+                    eval_opts=EvaluateOptions(
+                    aux=default_aux,
+                    interpret=interpret
+                    )
+                )
+                stats = synth_with_aux(problem, BFSIterator(grammar, :Start, max_depth=max_depth), 
+                    grammar, Dict{Int64,AbstractRuleNode}(), typemax(Int), opts=opts)
                 best_value = 0
             else
-                aux = AUX_FUNCTIONS[benchmark_name][mode]
-                stats = aulile(problem, BFSIterator, grammar, :Start, new_rule_symbol,
-                    aux, interpret=interpret, allow_evaluation_errors=true,
-                    max_iterations=max_iterations, max_depth=max_depth,
-                    max_enumerations=(max_enumerations / max_iterations))
+                opts = AulileOptions(
+                    max_iterations=max_iterations,
+                    max_depth=max_depth,
+                    synth_opts=SynthOptions(
+                    num_returned_programs=1,
+                    max_enumerations=max_enumerations,
+                    eval_opts=EvaluateOptions(
+                    aux=AUX_FUNCTIONS[benchmark_name][mode],
+                    interpret=interpret))
+                )
+                stats = aulile(problem, BFSIterator, grammar, :Start, opts=opts)
                 best_value = aux.best_value
             end
             if print_stats(stats, best_value)
