@@ -76,8 +76,8 @@ function experiment_main(benchmark_name::AbstractString,
 
     modes = parse_and_check_modes(what_to_run, benchmark_name)
     timestamp = Dates.format(now(), "yyyy-mm-dd_HH-MM-SS")
-    dir_path = dirname(@__FILE__)
-    res_path = joinpath(dir_path, "comparison_results")
+    dir_path = pkgdir(@__MODULE__)
+    res_path = joinpath(dir_path, "experiments", "aulile", "comparison_results")
     mkpath(res_path)
     res_file_name = "$(benchmark_name)_$(max_depth)_$(max_iterations)_$(max_enumerations)_$(timestamp).txt"
     res_file_path = joinpath(res_path, res_file_name)
