@@ -219,9 +219,7 @@ version = "1.0.1"
 
 [[deps.HerbSearch]]
 deps = ["DataStructures", "DocStringExtensions", "HerbConstraints", "HerbCore", "HerbGrammar", "HerbInterpret", "HerbSpecification", "MLStyle", "Random", "StatsBase", "TimerOutputs"]
-git-tree-sha1 = "c72ff0ce57093015036480279cd6a29ed2bf19eb"
-repo-rev = "124-Aulile"
-repo-url = "https://github.com/Herb-AI/HerbSearch.jl.git"
+path = "C:\\Users\\X1 Yoga 6th\\.julia\\dev\\HerbSearch"
 uuid = "3008d8e8-f9aa-438a-92ed-26e9c7b4829f"
 version = "1.0.0"
 weakdeps = ["Clingo_jll", "DecisionTree", "JSON"]
@@ -471,7 +469,7 @@ uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 version = "1.11.0"
 
 [[deps.RefactoringExperiments]]
-deps = ["Aqua", "Clingo_jll", "Dates", "DecisionTree", "Documenter", "HerbBenchmarks", "HerbConstraints", "HerbCore", "HerbGrammar", "HerbInterpret", "HerbSearch", "HerbSpecification", "JSON"]
+deps = ["Aqua", "Clingo_jll", "Dates", "DecisionTree", "Documenter", "HerbBenchmarks", "HerbConstraints", "HerbCore", "HerbGrammar", "HerbInterpret", "HerbSearch", "HerbSpecification", "JSON", "Test"]
 path = "."
 uuid = "0fbf8203-857b-4c6b-9279-f5863501e139"
 version = "0.0.0"
