@@ -1,6 +1,6 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.12.5"
+julia_version = "1.12"
 manifest_format = "2.0"
 project_hash = "2a1688002e1ca720c19a7832a95b28664834a29b"
 
@@ -221,7 +221,7 @@ version = "1.0.1"
 
 [[deps.HerbSearch]]
 deps = ["DataStructures", "DocStringExtensions", "HerbConstraints", "HerbCore", "HerbGrammar", "HerbInterpret", "HerbSpecification", "MLStyle", "Random", "StatsBase", "TimerOutputs"]
-git-tree-sha1 = "2b7bde3a39a242414e1b7362497ec95c4f605416"
+git-tree-sha1 = "72f2c715a34fd6ebcedf57f1b24e73e3942c75a7"
 repo-rev = "124-Aulile"
 repo-url = "https://github.com/Herb-AI/HerbSearch.jl.git"
 uuid = "3008d8e8-f9aa-438a-92ed-26e9c7b4829f"
