@@ -1,3 +1,8 @@
+using Pkg
+Pkg.activate(joinpath(@__DIR__, ".."))
+
+
+using Clingo_jll, JSON
 using RefactoringExperiments
 
 if length(ARGS) >= 5
