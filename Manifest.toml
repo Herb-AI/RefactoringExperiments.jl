@@ -1,8 +1,8 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.12.4"
+julia_version = "1.12.5"
 manifest_format = "2.0"
-project_hash = "fc46db9a5b7d3f8c19df48eb49abb46aca9b6639"
+project_hash = "676f2eb97c9bd5d57a3a48218caaf828b72eb912"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -116,9 +116,9 @@ version = "0.9.5"
 
 [[deps.Documenter]]
 deps = ["ANSIColoredPrinters", "AbstractTrees", "Base64", "CodecZlib", "Dates", "DocStringExtensions", "Downloads", "Git", "IOCapture", "InteractiveUtils", "JSON", "Logging", "Markdown", "MarkdownAST", "Pkg", "PrecompileTools", "REPL", "RegistryInstances", "SHA", "TOML", "Test", "Unicode"]
-git-tree-sha1 = "b37458ae37d8bdb643d763451585cd8d0e5b4a9e"
+git-tree-sha1 = "56e9c37b5e7c3b4f080ab1da18d72d5c290e184a"
 uuid = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
-version = "1.16.1"
+version = "1.17.0"
 
 [[deps.Downloads]]
 deps = ["ArgTools", "FileWatching", "LibCURL", "NetworkOptions"]
@@ -191,7 +191,9 @@ version = "0.2.3"
 
 [[deps.HerbConstraints]]
 deps = ["DataStructures", "DocStringExtensions", "HerbCore", "HerbGrammar", "MLStyle", "TimerOutputs"]
-git-tree-sha1 = "9d0acee83d0aaf836b024cc6ec3813f1361bffe5"
+git-tree-sha1 = "1d6b5315cc22cbf5654a44b199e5be19615a3321"
+repo-rev = "aulile_containsany"
+repo-url = "https://github.com/Herb-AI/HerbConstraints.jl.git"
 uuid = "1fa96474-3206-4513-b4fa-23913f296dfc"
 version = "1.1.2"
 weakdeps = ["Clingo_jll"]
@@ -219,7 +221,9 @@ version = "1.0.1"
 
 [[deps.HerbSearch]]
 deps = ["DataStructures", "DocStringExtensions", "HerbConstraints", "HerbCore", "HerbGrammar", "HerbInterpret", "HerbSpecification", "MLStyle", "Random", "StatsBase", "TimerOutputs"]
-path = "C:\\Users\\X1 Yoga 6th\\.julia\\dev\\HerbSearch"
+git-tree-sha1 = "5ee077a73335500783dd8843cceef8de9346dc30"
+repo-rev = "124-Aulile"
+repo-url = "https://github.com/Herb-AI/HerbSearch.jl.git"
 uuid = "3008d8e8-f9aa-438a-92ed-26e9c7b4829f"
 version = "1.0.0"
 weakdeps = ["Clingo_jll", "DecisionTree", "JSON"]
@@ -438,9 +442,9 @@ weakdeps = ["REPL"]
 
 [[deps.PrecompileTools]]
 deps = ["Preferences"]
-git-tree-sha1 = "5aa36f7049a63a1528fe8f7c3f2113413ffd4e1f"
+git-tree-sha1 = "07a921781cab75691315adc645096ed5e370cb77"
 uuid = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
-version = "1.2.1"
+version = "1.3.3"
 
 [[deps.Preferences]]
 deps = ["TOML"]
@@ -454,9 +458,9 @@ uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 version = "1.11.0"
 
 [[deps.PtrArrays]]
-git-tree-sha1 = "1d36ef11a9aaf1e8b74dacc6a731dd1de8fd493d"
+git-tree-sha1 = "4fbbafbc6251b883f4d2705356f3641f3652a7fe"
 uuid = "43287f4e-b6f4-7ad1-bb20-aadabca52c3d"
-version = "1.3.0"
+version = "1.4.0"
 
 [[deps.REPL]]
 deps = ["InteractiveUtils", "JuliaSyntaxHighlighting", "Markdown", "Sockets", "StyledStrings", "Unicode"]
