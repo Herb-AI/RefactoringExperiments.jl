@@ -11,6 +11,7 @@ using Dates
 
 include("aulile_auxiliary_functions.jl")
 include("helpers.jl")
+include("dream_coder_experiments.jl")
 
 export
     experiment_main,
@@ -19,5 +20,6 @@ export
     print_stats,
     get_benchmark,
     get_start_symbol,
-    parse_and_check_modes
+    parse_and_check_modes,
+    run_dream_coder_experiment
 end
