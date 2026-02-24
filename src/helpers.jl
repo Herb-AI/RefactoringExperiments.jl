@@ -32,7 +32,7 @@ function run_benchmark_comparison(
             if mode == "regular"
                 opts = SynthOptions(
                     num_returned_programs=1,
-                    max_enumerations=max_enumerations,
+                    max_enumerations=max_iterations*max_enumerations,
                     eval_opts=EvaluateOptions(
                     aux=aux,
                     interpret=interpret
@@ -46,6 +46,7 @@ function run_benchmark_comparison(
                 opts = AulileOptions(
                     max_iterations=max_iterations,
                     max_depth=max_depth,
+                    restart_iterator=true,
                     synth_opts=SynthOptions(
                     num_returned_programs=1,
                     max_enumerations=max_enumerations,
