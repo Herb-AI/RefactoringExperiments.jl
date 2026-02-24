@@ -28,12 +28,13 @@ function run_benchmark_comparison(
         grammar = deepcopy(init_grammar)
 
         for (mode_idx, mode) in enumerate(modes)
+            aux = default_aux
             if mode == "regular"
                 opts = SynthOptions(
                     num_returned_programs=1,
                     max_enumerations=max_enumerations,
                     eval_opts=EvaluateOptions(
-                    aux=default_aux,
+                    aux=aux,
                     interpret=interpret
                     )
                 )
@@ -41,6 +42,7 @@ function run_benchmark_comparison(
                     grammar, Dict{Int64,AbstractRuleNode}(), typemax(Int), opts=opts)
                 best_value = 0
             else
+                aux=AUX_FUNCTIONS[benchmark_name][mode]
                 opts = AulileOptions(
                     max_iterations=max_iterations,
                     max_depth=max_depth,
@@ -48,7 +50,7 @@ function run_benchmark_comparison(
                     num_returned_programs=1,
                     max_enumerations=max_enumerations,
                     eval_opts=EvaluateOptions(
-                    aux=AUX_FUNCTIONS[benchmark_name][mode],
+                    aux=aux,
                     interpret=interpret))
                 )
                 stats = aulile(problem, BFSIterator, grammar, :Start, opts=opts)
