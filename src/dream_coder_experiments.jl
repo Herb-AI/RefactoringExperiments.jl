@@ -27,6 +27,7 @@ function dream_coder_experiments(benchmark_name,
         println("No compression!!")
     end
     grammar = deepcopy(init_grammar) 
+    new_rules_decoding = Dict{Int, AbstractRuleNode}()
     for (pid, problem) in enumerate(problems)
         println("\nProblem # $pid")
         aux = default_aux
@@ -40,7 +41,6 @@ function dream_coder_experiments(benchmark_name,
             k=compression_k, time_limit_sec=compression_timeout, max_compression_nodes=max_compression_nodes)
         end
         # a dictionary to enable interpretation of new rules.
-        new_rules_decoding = Dict{Int, AbstractRuleNode}()
         for rule in programs_to_add
             rule_type = return_type(grammar, rule)
             new_expr = rulenode2expr(rule, grammar)
