@@ -231,24 +231,24 @@ const AUX_FUNCTIONS = Dict(
         "aulile_penalize_deleting_2" => construct_aux_function((a, b) ->
                 levenshtein_with_uppercase!(a.str, b.str, Inf, 1, 1),
             HerbBenchmarks.String_transformations_2020.StringState),
-        "unequal" => construct_aux_function(strings_unequal,
+        "number_of_unsolved_examples" => construct_aux_function(strings_unequal,
             HerbBenchmarks.String_transformations_2020.StringState)
     ), "robots" => Dict(
         "aulile_all_steps_manhattan" => construct_aux_function(robot_all_steps_dist,
             HerbBenchmarks.Robots_2020.RobotState),
         "aulile_simple_manhattan" => construct_aux_function(robot_simple_dist,
             HerbBenchmarks.Robots_2020.RobotState),
-        "unequal" => construct_aux_function(robot_unequal,
+        "number_of_unsolved_examples" => construct_aux_function(robot_unequal,
             HerbBenchmarks.Robots_2020.RobotState),
     ), "pixels" => Dict(
         "aulile_edit_distance" => construct_aux_function(pixel_edit_dist,
             HerbBenchmarks.Pixels_2020.PixelState),
-        "unequal" => construct_aux_function(pixel_unequal,
+        "number_of_unsolved_examples" => construct_aux_function(pixel_unequal,
             HerbBenchmarks.Pixels_2020.PixelState)
     ), "karel" => Dict(
         "aulile_edit_distance" => construct_aux_function(karel_edit_dist,
             HerbBenchmarks.Karel_2018.KarelState),
-        "unequal" => construct_aux_function(karel_unequal,
+        "number_of_unsolved_examples" => construct_aux_function(karel_unequal,
             HerbBenchmarks.Karel_2018.KarelState)
     ),
 )
