@@ -16,6 +16,8 @@ function dream_coder_experiments(benchmark_name,
     compression_timeout::Int=60,
     max_compression_nodes::Int=10
     )
+    SMALL_COST = 0.5
+    isprobabilistic(init_grammar) || init_probabilities!(init_grammar)
     ACTUAL_START = get_actual_start(init_grammar)
     best_kept_programs = Vector{RuleNode}()
     println("Benchmark: $(benchmark_name)")
@@ -44,7 +46,11 @@ function dream_coder_experiments(benchmark_name,
             new_expr = rulenode2expr(rule, grammar)
             to_add = :($rule_type = $(new_expr))
             prev_lenght = length(grammar.rules)
-            add_rule!(grammar, to_add)
+            if isprobabilistic(grammar)
+                add_rule!(grammar, SMALL_COST, to_add)
+            else 
+                add_rule!(grammar, to_add)
+            end
             if length(grammar.rules) > prev_lenght
                 grammar_size = length(grammar.rules)
                 new_rules_decoding[grammar_size] = rule
@@ -60,7 +66,7 @@ function dream_coder_experiments(benchmark_name,
             interpret=interpret
             )
         )
-        synth_stats = synth_with_aux(problem, BFSIterator(grammar, ACTUAL_START, max_depth=max_depth), 
+        synth_stats = synth_with_aux(problem, CostBasedBottomUpIterator(grammar, ACTUAL_START; current_costs=HerbSearch.get_costs(grammar)),
             grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
 
         isempty(synth_stats.programs) && @warn "Synthesis did not return any programs for problem $pid."
