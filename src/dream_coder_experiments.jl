@@ -9,8 +9,8 @@ function dream_coder_experiments(benchmark_name,
     init_grammar::AbstractGrammar, 
     problems::AbstractVector{Problem},
     interpret::Function;
-    max_depth::Int, max_iterations::Int, 
-    max_enumerations::Int, mode,
+    max_depth::Int, max_iterations::Int,
+    mode,
     do_compression = false,
     compression_k::Int=1,       # repeats default Compression settings
     compression_timeout::Int=60,
@@ -60,7 +60,7 @@ function dream_coder_experiments(benchmark_name,
         # synthesize until solving, or for a limited number of iterations. Then return best programs found so far
         opts = SynthOptions(
         num_returned_programs=1,
-        max_enumerations=max_iterations*max_enumerations, 
+        max_enumerations=max_iterations, 
         eval_opts=EvaluateOptions(
             aux=aux,
             interpret=interpret
@@ -86,7 +86,7 @@ function get_actual_start(grammar)
 end
 
 function run_dream_coder_experiment(benchmark_name::AbstractString,
-    max_depth::Int, max_iterations::Int, max_enumerations::Int;
+    max_depth::Int, max_iterations::Int;
     aux_tag::AbstractString="regular", use_compression::Bool, compression_timeout::Int=120)
 
     modes = parse_and_check_modes(aux_tag, benchmark_name)
@@ -94,7 +94,7 @@ function run_dream_coder_experiment(benchmark_name::AbstractString,
     dir_path = pkgdir(@__MODULE__)
     res_path = joinpath(dir_path, "experiments", "aulile", "comparison_results")
     mkpath(res_path)
-    res_file_name = "$(benchmark_name)_$(max_depth)_$(max_iterations)_$(max_enumerations)_$(timestamp).txt"
+    res_file_name = "$(benchmark_name)_$(max_depth)_$(max_iterations)_$(timestamp).txt"
     res_file_path = joinpath(res_path, res_file_name)
 
     # open results file and redirect STDIO
@@ -111,7 +111,7 @@ function run_dream_coder_experiment(benchmark_name::AbstractString,
             end
             for mode in modes
                 dream_coder_experiments(benchmark_name, init_grammar, problems, 
-                 benchmark.interpret;max_depth=max_depth, max_iterations=max_iterations, max_enumerations=max_enumerations,
+                 benchmark.interpret;max_depth=max_depth, max_iterations=max_iterations,
                  mode=mode, do_compression=use_compression, compression_timeout=compression_timeout)
             end
         println()
