@@ -44,6 +44,7 @@ function dream_coder_experiments(benchmark_name,
     unsolved_problems = Set(problems)
     while !isempty(unsolved_problems) && (attempt_counter < max_number_of_attempts)
         attempt_counter += 1
+        @info "Problems yet to solve on attempt $(attempt_counter): $(length(unsolved_problems))\n"
         @info "Best programs for attempt $(attempt_counter): $best_kept_programs\n"
         programs_to_add = best_kept_programs
         if do_compression && length(best_kept_programs) > 1
@@ -72,13 +73,13 @@ function dream_coder_experiments(benchmark_name,
         best_kept_programs = Vector{RuleNode}()
         # try to synthesize a program for all problems that are not solved yet
         for problem in unsolved_problems
-            println("\nProblem # $(problem.name)")            
+            @info "\nProblem #$(problem.name)"
+            println("\nProblem #$(problem.name)")            
             # synthesize until solving, or for a limited number of iterations. Then return best programs found so far
             synth_stats = synth_with_aux(problem, BFSIterator(grammar, ACTUAL_START),
                 grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
             # synth_stats = synth_with_aux(problem, CostBasedBottomUpIterator(grammar, ACTUAL_START; current_costs=HerbSearch.get_costs(grammar)),
             #     grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
-
             
             if synth_stats.score == 0
                 push!(best_kept_programs, synth_stats.programs[begin])
@@ -97,7 +98,7 @@ function get_actual_start(grammar)
 end
 
 function run_dream_coder_experiment(benchmark_name::AbstractString, max_iterations::Int;
-    aux_tag::AbstractString="regular", max_number_of_attempts::Int, use_compression::Bool, compression_timeout::Int=120)
+    aux_tag::AbstractString="number_of_unsolved_examples", max_number_of_attempts::Int, use_compression::Bool, compression_timeout::Int=120)
 
     modes = parse_and_check_modes(aux_tag, benchmark_name)
     timestamp = Dates.format(now(), "yyyy-mm-dd_HH-MM-SS")
@@ -111,7 +112,6 @@ function run_dream_coder_experiment(benchmark_name::AbstractString, max_iteratio
     open(res_file_path, "w") do io
         redirect_stdout(io) do
             benchmark = get_benchmark(benchmark_name)
-            new_rule_symbol = get_start_symbol(benchmark_name)
             if benchmark_name == "karel"
                 problems = HerbBenchmarks.Karel_2018.get_all_problems()
                 init_grammar = HerbBenchmarks.Karel_2018.grammar_karel
@@ -119,11 +119,9 @@ function run_dream_coder_experiment(benchmark_name::AbstractString, max_iteratio
                 problems = get_all_problems(benchmark)
                 init_grammar = get_default_grammar(benchmark)
             end
-            for mode in modes
-                dream_coder_experiments(benchmark_name, init_grammar, problems, 
-                 benchmark.interpret; max_iterations=max_iterations,
-                 mode=mode, max_number_of_attempts=max_number_of_attempts, do_compression=use_compression, compression_timeout=compression_timeout)
-            end
+            dream_coder_experiments(benchmark_name, init_grammar, problems, 
+                benchmark.interpret; max_iterations=max_iterations,
+                mode=only(modes), max_number_of_attempts=max_number_of_attempts, do_compression=use_compression, compression_timeout=compression_timeout)
         println()
         end
         
