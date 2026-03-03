@@ -30,7 +30,8 @@ function dream_coder_experiments(benchmark_name,
         grammar = deepcopy(init_grammar) 
         # add best programs from previous iterations to the grammar
         programs_to_add = best_kept_programs
-        if do_compression
+        if do_compression && length(best_kept_programs) > 1
+            println("Best programs for iteration $pid\n$best_kept_programs\n")
             # compress programs with the given parameters.
             programs_to_add =  HerbSearch.compress_with_splitting(best_kept_programs, grammar;
             k=compression_k, time_limit_sec=compression_timeout, max_compression_nodes=max_compression_nodes)
@@ -48,6 +49,7 @@ function dream_coder_experiments(benchmark_name,
                 new_rules_decoding[grammar_size] = rule
             end
         end
+        @info grammar
         # synthesize until solving, or for a limited number of iterations. Then return best programs found so far
         opts = SynthOptions(
         num_returned_programs=1,
@@ -61,7 +63,7 @@ function dream_coder_experiments(benchmark_name,
             grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
 
         isempty(synth_stats.programs) && @info "Synthesis did not return any programs for problem $pid."
-        _ = print_stats(synth_stats, aux.best_value)
+        # _ = print_stats(synth_stats, aux.best_value)
         append!(best_kept_programs, synth_stats.programs)
     end
 end
@@ -69,7 +71,7 @@ end
 
 function run_dream_coder_experiment(benchmark_name::AbstractString,
     max_depth::Int, max_iterations::Int, max_enumerations::Int;
-    what_to_run::AbstractString="regular", use_compression)
+    what_to_run::AbstractString="regular", use_compression::Bool, compression_timeout::Int=30)
     modes = parse_and_check_modes(what_to_run, benchmark_name)
     timestamp = Dates.format(now(), "yyyy-mm-dd_HH-MM-SS")
     dir_path = pkgdir(@__MODULE__)

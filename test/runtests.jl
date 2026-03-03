@@ -13,5 +13,6 @@ using JSON
 using Clingo_jll
 
 @testset "HerbSearch.jl" verbose = true begin
-    include("test_aulile.jl")
+    # include("test_aulile.jl")
+    include("test_dream_coder.jl")
 end
