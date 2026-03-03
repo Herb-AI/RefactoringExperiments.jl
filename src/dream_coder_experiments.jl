@@ -71,7 +71,9 @@ function dream_coder_experiments(benchmark_name,
 
         isempty(synth_stats.programs) && @warn "Synthesis did not return any programs for problem $pid."
         # _ = print_stats(synth_stats, aux.best_value)
-        append!(best_kept_programs, synth_stats.programs)
+        if synth_stats.cost == 0
+            append!(best_kept_programs, synth_stats.programs[begin])
+        end
     end
 end
 
