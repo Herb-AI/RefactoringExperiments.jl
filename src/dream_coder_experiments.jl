@@ -85,8 +85,9 @@ end
 
 function run_dream_coder_experiment(benchmark_name::AbstractString,
     max_depth::Int, max_iterations::Int, max_enumerations::Int;
-    what_to_run::AbstractString="regular", use_compression::Bool, compression_timeout::Int=30)
-    modes = parse_and_check_modes(what_to_run, benchmark_name)
+    aux_tag::AbstractString="regular", use_compression::Bool, compression_timeout::Int=120)
+
+    modes = parse_and_check_modes(aux_tag, benchmark_name)
     timestamp = Dates.format(now(), "yyyy-mm-dd_HH-MM-SS")
     dir_path = pkgdir(@__MODULE__)
     res_path = joinpath(dir_path, "experiments", "aulile", "comparison_results")
@@ -109,7 +110,7 @@ function run_dream_coder_experiment(benchmark_name::AbstractString,
             for mode in modes
                 dream_coder_experiments(benchmark_name, init_grammar, problems, 
                  benchmark.interpret;max_depth=max_depth, max_iterations=max_iterations, max_enumerations=max_enumerations,
-                 mode=mode, do_compression=use_compression)
+                 mode=mode, do_compression=use_compression, compression_timeout=compression_timeout)
             end
         println()
         end
