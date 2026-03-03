@@ -12,7 +12,7 @@ function dream_coder_experiments(benchmark_name,
     max_depth::Int, max_iterations::Int, 
     max_enumerations::Int, mode,
     do_compression = false,
-    compression_k::Int=0,       # repeats default Compression settings
+    compression_k::Int=1,       # repeats default Compression settings
     compression_timeout::Int=60,
     max_compression_nodes::Int=10
     )
@@ -49,7 +49,6 @@ function dream_coder_experiments(benchmark_name,
                 new_rules_decoding[grammar_size] = rule
             end
         end
-        @info grammar
         # synthesize until solving, or for a limited number of iterations. Then return best programs found so far
         opts = SynthOptions(
         num_returned_programs=1,
@@ -62,7 +61,7 @@ function dream_coder_experiments(benchmark_name,
         synth_stats = synth_with_aux(problem, BFSIterator(grammar, :Start, max_depth=max_depth), 
             grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
 
-        isempty(synth_stats.programs) && @info "Synthesis did not return any programs for problem $pid."
+        isempty(synth_stats.programs) && @warn "Synthesis did not return any programs for problem $pid."
         # _ = print_stats(synth_stats, aux.best_value)
         append!(best_kept_programs, synth_stats.programs)
     end
