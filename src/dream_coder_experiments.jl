@@ -16,6 +16,7 @@ function dream_coder_experiments(benchmark_name,
     compression_timeout::Int=60,
     max_compression_nodes::Int=10
     )
+    ACTUAL_START = get_actual_start(init_grammar)
     best_kept_programs = Vector{RuleNode}()
     println("Benchmark: $(benchmark_name)")
     if do_compression
@@ -23,11 +24,11 @@ function dream_coder_experiments(benchmark_name,
     else
         println("No compression!!")
     end
+    grammar = deepcopy(init_grammar) 
     for (pid, problem) in enumerate(problems)
         println("\nProblem # $pid")
         aux = default_aux
         (mode in keys(AUX_FUNCTIONS[benchmark_name])) && (aux = AUX_FUNCTIONS[benchmark_name][mode])
-        grammar = deepcopy(init_grammar) 
         # add best programs from previous iterations to the grammar
         programs_to_add = best_kept_programs
         if do_compression && length(best_kept_programs) > 1
@@ -49,6 +50,7 @@ function dream_coder_experiments(benchmark_name,
                 new_rules_decoding[grammar_size] = rule
             end
         end
+        @info grammar
         # synthesize until solving, or for a limited number of iterations. Then return best programs found so far
         opts = SynthOptions(
         num_returned_programs=1,
@@ -58,7 +60,7 @@ function dream_coder_experiments(benchmark_name,
             interpret=interpret
             )
         )
-        synth_stats = synth_with_aux(problem, BFSIterator(grammar, :Start, max_depth=max_depth), 
+        synth_stats = synth_with_aux(problem, BFSIterator(grammar, ACTUAL_START, max_depth=max_depth), 
             grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
 
         isempty(synth_stats.programs) && @warn "Synthesis did not return any programs for problem $pid."
@@ -67,6 +69,13 @@ function dream_coder_experiments(benchmark_name,
     end
 end
 
+function get_actual_start(grammar)
+    if grammar.types[1] == :Start
+        return grammar.rules[1]
+    else
+        @error "Where's the start in your grammar?"
+    end
+end
 
 function run_dream_coder_experiment(benchmark_name::AbstractString,
     max_depth::Int, max_iterations::Int, max_enumerations::Int;
