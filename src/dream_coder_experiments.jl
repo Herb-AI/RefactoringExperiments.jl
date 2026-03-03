@@ -8,39 +8,50 @@
 function dream_coder_experiments(benchmark_name,
     init_grammar::AbstractGrammar, 
     problems::AbstractVector{Problem},
-    interpret::Function;
-    max_depth::Int, max_iterations::Int,
+    interpret::Function; max_iterations::Int,
     mode,
     do_compression = false,
     compression_k::Int=1,       # repeats default Compression settings
-    compression_timeout::Int=60,
-    max_compression_nodes::Int=10
+    compression_timeout::Int=120,
+    max_compression_nodes::Int=10,
+    max_number_of_attempts::Int=5
     )
-    SMALL_COST = 0.5
-    isprobabilistic(init_grammar) || init_probabilities!(init_grammar)
-    ACTUAL_START = get_actual_start(init_grammar)
-    best_kept_programs = Vector{RuleNode}()
     println("Benchmark: $(benchmark_name)")
     if do_compression
         println("Yes compression!!")
     else
         println("No compression!!")
     end
+    SMALL_COST = 0.5
+    isprobabilistic(init_grammar) || init_probabilities!(init_grammar)
+    ACTUAL_START = get_actual_start(init_grammar)
+    aux = default_aux
+            (mode in keys(AUX_FUNCTIONS[benchmark_name])) && (aux = AUX_FUNCTIONS[benchmark_name][mode])
+    opts = SynthOptions(
+            num_returned_programs=1,
+            max_enumerations=max_iterations, 
+            eval_opts=EvaluateOptions(
+                aux=aux,
+                interpret=interpret
+                )
+            )
+
+    best_kept_programs = Vector{RuleNode}()
     grammar = deepcopy(init_grammar) 
+    # a dictionary to enable interpretation of new rules.
     new_rules_decoding = Dict{Int, AbstractRuleNode}()
-    for (pid, problem) in enumerate(problems)
-        println("\nProblem # $pid")
-        aux = default_aux
-        (mode in keys(AUX_FUNCTIONS[benchmark_name])) && (aux = AUX_FUNCTIONS[benchmark_name][mode])
-        # add best programs from previous iterations to the grammar
+    attempt_counter = 0
+    unsolved_problems = Set(problems)
+    while !isempty(unsolved_problems) && (attempt_counter < max_number_of_attempts)
+        attempt_counter += 1
+        @info "Best programs for attempt $(attempt_counter): $best_kept_programs\n"
         programs_to_add = best_kept_programs
         if do_compression && length(best_kept_programs) > 1
-            println("Best programs for iteration $pid\n$best_kept_programs\n")
             # compress programs with the given parameters.
-            programs_to_add =  HerbSearch.compress_with_splitting(best_kept_programs, grammar;
+            programs_to_add = HerbSearch.compress_with_splitting(best_kept_programs, grammar;
             k=compression_k, time_limit_sec=compression_timeout, max_compression_nodes=max_compression_nodes)
         end
-        # a dictionary to enable interpretation of new rules.
+        # add the new programs to the grammar
         for rule in programs_to_add
             rule_type = return_type(grammar, rule)
             new_expr = rulenode2expr(rule, grammar)
@@ -51,28 +62,28 @@ function dream_coder_experiments(benchmark_name,
             else 
                 add_rule!(grammar, to_add)
             end
+            # if a rule was added successfully, add it to the encodings dictionary.
             if length(grammar.rules) > prev_lenght
                 grammar_size = length(grammar.rules)
                 new_rules_decoding[grammar_size] = rule
             end
         end
-        @info grammar
-        # synthesize until solving, or for a limited number of iterations. Then return best programs found so far
-        opts = SynthOptions(
-        num_returned_programs=1,
-        max_enumerations=max_iterations, 
-        eval_opts=EvaluateOptions(
-            aux=aux,
-            interpret=interpret
-            )
-        )
-        synth_stats = synth_with_aux(problem, CostBasedBottomUpIterator(grammar, ACTUAL_START; current_costs=HerbSearch.get_costs(grammar)),
-            grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
+        # empty the list of best programs -- in this iterations we will be collecting new best programs.
+        best_kept_programs = Vector{RuleNode}()
+        # try to synthesize a program for all problems that are not solved yet
+        for problem in unsolved_problems
+            println("\nProblem # $(problem.name)")            
+            # synthesize until solving, or for a limited number of iterations. Then return best programs found so far
+            synth_stats = synth_with_aux(problem, BFSIterator(grammar, ACTUAL_START),
+                grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
+            # synth_stats = synth_with_aux(problem, CostBasedBottomUpIterator(grammar, ACTUAL_START; current_costs=HerbSearch.get_costs(grammar)),
+            #     grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
 
-        isempty(synth_stats.programs) && @warn "Synthesis did not return any programs for problem $pid."
-        # _ = print_stats(synth_stats, aux.best_value)
-        if synth_stats.score == 0
-            push!(best_kept_programs, synth_stats.programs[begin])
+            
+            if synth_stats.score == 0
+                push!(best_kept_programs, synth_stats.programs[begin])
+                delete!(unsolved_problems, problem)
+            end
         end
     end
 end
@@ -85,16 +96,15 @@ function get_actual_start(grammar)
     end
 end
 
-function run_dream_coder_experiment(benchmark_name::AbstractString,
-    max_depth::Int, max_iterations::Int;
-    aux_tag::AbstractString="regular", use_compression::Bool, compression_timeout::Int=120)
+function run_dream_coder_experiment(benchmark_name::AbstractString, max_iterations::Int;
+    aux_tag::AbstractString="regular", max_number_of_attempts::Int, use_compression::Bool, compression_timeout::Int=120)
 
     modes = parse_and_check_modes(aux_tag, benchmark_name)
     timestamp = Dates.format(now(), "yyyy-mm-dd_HH-MM-SS")
     dir_path = pkgdir(@__MODULE__)
     res_path = joinpath(dir_path, "experiments", "aulile", "comparison_results")
     mkpath(res_path)
-    res_file_name = "$(benchmark_name)_$(max_depth)_$(max_iterations)_$(timestamp).txt"
+    res_file_name = "$(benchmark_name)_$(max_iterations)_$(timestamp).txt"
     res_file_path = joinpath(res_path, res_file_name)
 
     # open results file and redirect STDIO
@@ -111,8 +121,8 @@ function run_dream_coder_experiment(benchmark_name::AbstractString,
             end
             for mode in modes
                 dream_coder_experiments(benchmark_name, init_grammar, problems, 
-                 benchmark.interpret;max_depth=max_depth, max_iterations=max_iterations,
-                 mode=mode, do_compression=use_compression, compression_timeout=compression_timeout)
+                 benchmark.interpret; max_iterations=max_iterations,
+                 mode=mode, max_number_of_attempts=max_number_of_attempts, do_compression=use_compression, compression_timeout=compression_timeout)
             end
         println()
         end

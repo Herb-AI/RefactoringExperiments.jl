@@ -1,4 +1,3 @@
 @testset "test_dream_coder.jl" begin
-    # run_dream_coder_experiment("karel", 15, 10, 100, what_to_run="regular+aulile_edit_distance", use_compression=false)
-    run_dream_coder_experiment("karel", 15, 10, 100, what_to_run="regular+aulile_edit_distance", use_compression=true, compression_timeout=120)
+    run_dream_coder_experiment("karel", 1000, aux_tag="regular",max_number_of_attempts=2, use_compression=true, compression_timeout=120)
 end
