@@ -39,7 +39,7 @@ function run_benchmark_comparison(
                     )
                 )
                 stats = synth_with_aux(problem, BFSIterator(grammar, :Start, max_depth=max_depth),
-                    grammar, typemax(Int), opts=opts)
+                    grammar, typemax(Int); opts=opts)
                 best_value = 0
             else
                 aux = AUX_FUNCTIONS[benchmark_name][mode]
@@ -49,11 +49,12 @@ function run_benchmark_comparison(
                     synth_opts=SynthOptions(
                         num_returned_programs=1,
                         max_enumerations=max_enumerations,
+                        skip_old_programs=false,
                         eval_opts=EvaluateOptions(
                             aux=aux,
                             interpret=interpret))
                 )
-                stats = aulile(problem, BFSIterator, grammar, :Start, opts=opts)
+                stats = aulile(problem, BFSIterator, grammar, :Start; opts=opts)
                 best_value = aux.best_value
             end
             if print_stats(stats, best_value)
