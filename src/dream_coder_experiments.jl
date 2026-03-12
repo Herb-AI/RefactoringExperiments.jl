@@ -98,12 +98,12 @@ function get_actual_start(grammar)
 end
 
 function run_dream_coder_experiment(benchmark_name::AbstractString, max_iterations::Int;
-    aux_tag::AbstractString="number_of_unsolved_examples", max_number_of_attempts::Int, use_compression::Bool, compression_timeout::Int=120)
+    aux_tag::AbstractString="default", max_number_of_attempts::Int, use_compression::Bool, compression_timeout::Int=120)
 
     modes = parse_and_check_modes(aux_tag, benchmark_name)
     timestamp = Dates.format(now(), "yyyy-mm-dd_HH-MM-SS")
     dir_path = pkgdir(@__MODULE__)
-    res_path = joinpath(dir_path, "experiments", "aulile", "comparison_results")
+    res_path = joinpath(dir_path, "experiments", "dream_coder", "comparison_results")
     mkpath(res_path)
     res_file_name = "$(benchmark_name)_$(max_iterations)_$(timestamp).txt"
     res_file_path = joinpath(res_path, res_file_name)
