@@ -99,10 +99,6 @@ function levenshtein_with_uppercase!(
     end
 end
 
-strings_unequal(a::HerbBenchmarks.String_transformations_2020.StringState,
-    b::HerbBenchmarks.String_transformations_2020.StringState) = a.str != b.str
-
-
 function karel_edit_dist(expected::HerbBenchmarks.Karel_2018.KarelState,
     actual::HerbBenchmarks.Karel_2018.KarelState)
     dist = sum(abs.(expected.hero.position .- actual.hero.position))
@@ -117,8 +113,6 @@ function karel_edit_dist(expected::HerbBenchmarks.Karel_2018.KarelState,
     end
     return dist
 end
-
-karel_unequal(a::HerbBenchmarks.Karel_2018.KarelState, b::HerbBenchmarks.Karel_2018.KarelState) = !(a.hero == b.hero && a.markers == b.markers)
 
 function Base.:(==)(a::HerbBenchmarks.Robots_2020.RobotState, b::HerbBenchmarks.Robots_2020.RobotState)
     return a.holds_ball == b.holds_ball &&
@@ -170,9 +164,6 @@ function robot_simple_dist(expected::HerbBenchmarks.Robots_2020.RobotState,
     return dist
 end
 
-robot_unequal(a::HerbBenchmarks.Robots_2020.RobotState,
-    b::HerbBenchmarks.Robots_2020.RobotState) = !(a.robot_x == b.robot_x && a.robot_y == b.robot_y && a.holds_ball == b.holds_ball)
-
 function pixel_edit_dist(expected::HerbBenchmarks.Pixels_2020.PixelState,
     actual::HerbBenchmarks.Pixels_2020.PixelState)
     if size(expected.matrix) != size(actual.matrix)
@@ -180,9 +171,6 @@ function pixel_edit_dist(expected::HerbBenchmarks.Pixels_2020.PixelState,
     end
     return count(expected.matrix .!= actual.matrix)
 end
-
-pixel_unequal(p1::HerbBenchmarks.Pixels_2020.PixelState, p2::HerbBenchmarks.Pixels_2020.PixelState) = !(p1.matrix == p2.matrix)
-
 
 """
     construct_aux_function(dist_fn::Function, ::Type{OutputType}) where {OutputType}
@@ -231,24 +219,20 @@ const AUX_FUNCTIONS = Dict(
         "aulile_penalize_deleting_2" => construct_aux_function((a, b) ->
                 levenshtein_with_uppercase!(a.str, b.str, Inf, 1, 1),
             HerbBenchmarks.String_transformations_2020.StringState),
-        "number_of_unsolved_examples" => construct_aux_function(strings_unequal,
-            HerbBenchmarks.String_transformations_2020.StringState)
+        "default" => default_aux
     ), "robots" => Dict(
         "aulile_all_steps_manhattan" => construct_aux_function(robot_all_steps_dist,
             HerbBenchmarks.Robots_2020.RobotState),
         "aulile_simple_manhattan" => construct_aux_function(robot_simple_dist,
             HerbBenchmarks.Robots_2020.RobotState),
-        "number_of_unsolved_examples" => construct_aux_function(robot_unequal,
-            HerbBenchmarks.Robots_2020.RobotState),
+        "default" => default_aux
     ), "pixels" => Dict(
         "aulile_edit_distance" => construct_aux_function(pixel_edit_dist,
             HerbBenchmarks.Pixels_2020.PixelState),
-        "number_of_unsolved_examples" => construct_aux_function(pixel_unequal,
-            HerbBenchmarks.Pixels_2020.PixelState)
+        "default" => default_aux
     ), "karel" => Dict(
         "aulile_edit_distance" => construct_aux_function(karel_edit_dist,
             HerbBenchmarks.Karel_2018.KarelState),
-        "number_of_unsolved_examples" => construct_aux_function(karel_unequal,
-            HerbBenchmarks.Karel_2018.KarelState)
+        "default" => default_aux
     ),
 )
