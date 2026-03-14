@@ -74,13 +74,12 @@ function run_benchmark_comparison(
                     passed_tests[mode] += 1
                 end
 
-                # compression_stats = run_aulile(problem, grammar, new_rule_symbol, 
-                #     aux, HerbSearch.compress_with_splitting, interpret, 
-                #     max_depth, max_iterations, max_enumerations)
-                # compression_stats = AulileStats(nothing, typemax(Int), max_iterations, max_enumerations)
-                # if print_stats(compression_stats, aux.best_value)
-                #     passed_tests[mode * "+compression"] += 1
-                # end
+                compression_stats = run_aulile(problem, grammar, new_rule_symbol, 
+                    aux, HerbSearch.compress_with_splitting, interpret, 
+                    max_depth, max_iterations, max_enumerations)
+                if print_stats(compression_stats, aux.best_value)
+                    passed_tests[mode * "+compression"] += 1
+                end
             end
         end
         println()
