@@ -1,13 +1,31 @@
 function print_stats(stats::AulileStats, best_value::Number)
     passed = !isnothing(stats.program) && stats.score <= best_value
-    print(Int(passed), ", ", stats.iterations, ", ", stats.enumerations)
+    print(Int(passed), ", ", stats.iterations, ", ", stats.enumerations, "; ")
     return passed
 end
 
 function print_stats(stats::SearchStats, best_value::Number)
     passed = !isnothing(stats.programs) && length(stats.programs) > 0 && stats.score <= best_value
-    print(Int(passed), ", ", 1, ", ", stats.enumerations)
+    print(Int(passed), ", ", 1, ", ", stats.enumerations, "; ")
     return passed
+end
+
+function run_aulile(problem::Problem, grammar::AbstractGrammar, new_rule_symbol::Symbol,
+        aux::AuxFunction, compression::Function, interpret::Function,
+        max_depth::Int, max_iterations::Int, max_enumerations::Int)
+    opts = AulileOptions(
+        max_iterations=max_iterations,
+        max_depth=max_depth,
+        compression=compression,
+        synth_opts=SynthOptions(
+            num_returned_programs=1,
+            max_enumerations=max_enumerations,
+            skip_old_programs=false,
+            eval_opts=EvaluateOptions(
+                aux=aux,
+                interpret=interpret))
+    )
+    return aulile(problem, BFSIterator, grammar, new_rule_symbol; opts=opts)
 end
 
 function run_benchmark_comparison(
@@ -15,58 +33,61 @@ function run_benchmark_comparison(
     init_grammar::AbstractGrammar, problems::Vector{Problem},
     interpret::Function, new_rule_symbol::Symbol;
     max_depth::Int, max_iterations::Int, max_enumerations::Int, modes::Vector{AbstractString})
-
-    passed_tests = fill(0, length(modes))
+    print(new_rule_symbol)
+    passed_tests::Dict{String, Int} = Dict{String, Int}()
 
     print("Problem: ")
     for mode in modes
         print(mode, "_solved_flag, ", mode, "_iter, ", mode, "_enums; ")
+        passed_tests[mode] = 0
+        if mode != "regular"
+            mode = mode * "+compression"
+            print(mode, "_solved_flag, ", mode, "_iter, ", mode, "_enums; ")
+            passed_tests[mode] = 0
+        end
     end
     println()
     for (i, problem) in enumerate(problems)
         print("Problem ", i, ": ")
         grammar = deepcopy(init_grammar)
 
-        for (mode_idx, mode) in enumerate(modes)
-            aux = default_aux
+        for mode in modes
             if mode == "regular"
                 opts = SynthOptions(
                     num_returned_programs=1,
                     max_enumerations=max_iterations * max_enumerations,
                     eval_opts=EvaluateOptions(
-                        aux=aux,
+                        aux=default_aux,
                         interpret=interpret
                     )
                 )
-                stats = synth_with_aux(problem, BFSIterator(grammar, :Start, max_depth=max_depth),
+                stats = synth_with_aux(problem, BFSIterator(grammar, new_rule_symbol, max_depth=max_depth),
                     grammar, typemax(Int); opts=opts)
-                best_value = 0
+                if print_stats(stats, 0)
+                    passed_tests[mode] += 1
+                end
             else
                 aux = AUX_FUNCTIONS[benchmark_name][mode]
-                opts = AulileOptions(
-                    max_iterations=max_iterations,
-                    max_depth=max_depth,
-                    synth_opts=SynthOptions(
-                        num_returned_programs=1,
-                        max_enumerations=max_enumerations,
-                        skip_old_programs=false,
-                        eval_opts=EvaluateOptions(
-                            aux=aux,
-                            interpret=interpret))
-                )
-                stats = aulile(problem, BFSIterator, grammar, :Start; opts=opts)
-                best_value = aux.best_value
+                stats = run_aulile(problem, grammar, new_rule_symbol, 
+                    aux, default_compression, interpret, max_depth, max_iterations, max_enumerations)
+                if print_stats(stats, aux.best_value)
+                    passed_tests[mode] += 1
+                end
+
+                # compression_stats = run_aulile(problem, grammar, new_rule_symbol, 
+                #     aux, HerbSearch.compress_with_splitting, interpret, 
+                #     max_depth, max_iterations, max_enumerations)
+                # compression_stats = AulileStats(nothing, typemax(Int), max_iterations, max_enumerations)
+                # if print_stats(compression_stats, aux.best_value)
+                #     passed_tests[mode * "+compression"] += 1
+                # end
             end
-            if print_stats(stats, best_value)
-                passed_tests[mode_idx] += 1
-            end
-            print("; ")
         end
         println()
     end
     println()
 
-    for passed in passed_tests
+    for passed in values(passed_tests)
         @assert 0 <= passed <= length(problems)
     end
 
@@ -102,9 +123,23 @@ function experiment_main(benchmark_name::AbstractString,
                 max_depth=max_depth, max_iterations=max_iterations, max_enumerations=max_enumerations,
                 modes=modes)
 
-            println(join(modes, ","))
-            for (mode_idx, passed_tests) in enumerate(passed_tests_per_mode)
-                print(round(passed_tests / length(problems); digits=2))
+            for (mode_idx, mode) in enumerate(modes)
+                print(mode)
+                if mode ≠ "regular"
+                    print(",")
+                    print(mode, "+compression")
+                end
+                if mode_idx ≠ length(modes)
+                    print(",")
+                end
+            end
+            println()
+            for (mode_idx, mode) in enumerate(modes)
+                print(round(passed_tests_per_mode[mode] / length(problems); digits=2))
+                if mode ≠ "regular"
+                    print(",")
+                    print(round(passed_tests_per_mode[mode * "+compression"] / length(problems); digits=2))
+                end
                 if mode_idx ≠ length(modes)
                     print(",")
                 end
@@ -132,13 +167,7 @@ function get_benchmark(benchmark_name::String)
 end
 
 function get_start_symbol(benchmark_name::String)
-    if benchmark_name == "karel"
-        return :Action
-    elseif benchmark_name == "bitvectors"
-        return :Start
-    else
-        return :Operation
-    end
+    return :Start
 end
 
 function parse_and_check_modes(what_to_run::AbstractString, benchmark_name::AbstractString)::Vector{AbstractString}

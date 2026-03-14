@@ -27,13 +27,16 @@ def line_chart(
     x = range(len(labels))
     _, ax = plt.subplots(figsize=(10, 6))
 
-    non_regular_modes = {k: v for k, v in mode_scores.items() if k != "regular"}
-    best_mode = max(non_regular_modes.items(), key=lambda kv: kv[1][-1])[0]
+    no_compression_modes = {k: v for k, v in mode_scores.items() 
+        if k != "regular" and not k.endswith("+compression")}
+    compression_modes = {k: v for k, v in mode_scores.items() 
+        if k != "regular" and k.endswith("+compression")}
+    best_no_compression_mode = max(no_compression_modes.items(), key=lambda kv: kv[1][-1])[0]
+    best_compression_mode = max(compression_modes.items(), key=lambda kv: kv[1][-1])[0]
 
     baseline_color = (1.0, 0.0, 0.0)  # red
-    best_color = (0.0, 0.0, 1.0)  # blue
-    regular_final = mode_scores["regular"][-1]
-    best_final = mode_scores[best_mode][-1]
+    best_no_compression_color = (0.0, 0.0, 1.0)  # blue
+    best_compression_color = (0.0, 1.0, 0.0)  # green
 
     CUSTOM_LABELS = {
         "strings": {
@@ -44,13 +47,22 @@ def line_chart(
         }
     }
 
-    variant_modes = [m for m in non_regular_modes if m != best_mode]
-    n_variants = len(variant_modes)
+    no_compression_variant_modes = [m for m in no_compression_modes if m != best_no_compression_mode]
+
+    n_blue_variants = len(no_compression_variant_modes)
     variant_colors = [
-        colorsys.hsv_to_rgb(0.6, 0.6, 0.5 + 0.5 * i / max(1, n_variants - 1))
-        for i in range(n_variants)
+        colorsys.hsv_to_rgb(0.6, 0.6, 0.5 + 0.5 * i / max(1, n_blue_variants - 1))
+        for i in range(n_blue_variants)
     ]
-    variant_color_map = dict(zip(variant_modes, variant_colors))
+    blue_color_map = dict(zip(no_compression_variant_modes, variant_colors))
+
+    compression_variant_modes = [m for m in compression_modes if m != best_compression_mode]
+    n_green_variants = len(compression_variant_modes)
+    green_colors = [
+        colorsys.hsv_to_rgb(0.33, 0.6, 0.5 + 0.5 * i / max(1, n_green_variants - 1))
+        for i in range(n_green_variants)
+    ]
+    green_color_map = dict(zip(compression_variant_modes, green_colors))
 
     for mode, scores in mode_scores.items():
         if mode == "regular":
@@ -61,22 +73,40 @@ def line_chart(
                 "ms": 13,
                 "alpha": 0.6,
             }
-        elif mode == best_mode:
+        elif mode == best_no_compression_mode:
             style = {
                 "marker": "D",
-                "color": best_color,
+                "color": best_no_compression_color,
                 "dash": [1, 4],
                 "ms": 13,
                 "alpha": 0.8,
             }
-        else:
+        elif mode == best_compression_mode:
+            style = {
+                "marker": "D",
+                "color": best_compression_color,
+                "dash": [1, 4],
+                "ms": 13,
+                "alpha": 0.8,
+            }
+        elif mode in no_compression_modes:
             style = {
                 "marker": "o",
-                "color": variant_color_map[mode],
+                "color": blue_color_map[mode],
                 "dash": [1, 6],
                 "ms": 8,
                 "alpha": 0.8,
             }
+        elif mode in compression_modes:
+            style = {
+                "marker": "o",
+                "color": green_color_map[mode],
+                "dash": [1, 6],
+                "ms": 8,
+                "alpha": 0.8,
+            } 
+        else:
+            raise Exception("Unexpected Mode")
 
         (line,) = ax.plot(
             x,
