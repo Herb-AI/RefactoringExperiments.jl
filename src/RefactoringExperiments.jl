@@ -9,6 +9,8 @@ using HerbSpecification
 
 using Dates
 
+include("herb_core_patches.jl")
+
 include("aulile_auxiliary_functions.jl")
 include("helpers.jl")
 include("dream_coder_experiments.jl")

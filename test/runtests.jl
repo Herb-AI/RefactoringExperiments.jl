@@ -1,12 +1,6 @@
 using Aqua
 using DecisionTree: Leaf, Node
 using Documenter
-using HerbConstraints
-using HerbCore
-using HerbGrammar
-using HerbInterpret
-using HerbSearch
-using HerbSpecification
 using HerbBenchmarks
 using RefactoringExperiments
 using Test
