@@ -18,7 +18,7 @@ function run_aulile(problem::Problem, grammar::AbstractGrammar, new_rule_symbol:
         max_depth=max_depth,
         compression=compression,
         synth_opts=SynthOptions(
-            num_returned_programs=1,
+            num_returned_programs=5,
             max_enumerations=max_enumerations,
             skip_old_programs=false,
             eval_opts=EvaluateOptions(
