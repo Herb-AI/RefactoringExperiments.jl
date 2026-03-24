@@ -8,10 +8,13 @@ using HerbSearch
 using HerbGrammar
 using HerbConstraints
 using HerbSpecification
+using Clingo_jll
+using JSON 
+using HerbBenchmarks
 
 using Dates
 
-include("herb_core_patches.jl")
+include("herb_patches.jl")
 
 include("aulile_auxiliary_functions.jl")
 include("helpers.jl")

@@ -16,14 +16,20 @@ function dream_coder_experiments(benchmark_name,
     max_compression_nodes::Int=10,
     max_number_of_attempts::Int=5
     )
+    
+    # collect results of each attempt
+    experiment_results = []
     println("Benchmark: $(benchmark_name)")
     if do_compression
         println("Yes compression!!")
     else
         println("No compression!!")
     end
-    SMALL_COST = 0.5
+    SMALL_COST = 1.0
     isprobabilistic(init_grammar) || init_probabilities!(init_grammar)
+    for i in eachindex(init_grammar.log_probabilities)
+        init_grammar.log_probabilities[i] = SMALL_COST
+    end
     ACTUAL_START = get_actual_start(init_grammar)
     aux = default_aux
             (mode in keys(AUX_FUNCTIONS[benchmark_name])) && (aux = AUX_FUNCTIONS[benchmark_name][mode])
@@ -42,7 +48,10 @@ function dream_coder_experiments(benchmark_name,
     new_rules_decoding = Dict{Int, AbstractRuleNode}()
     attempt_counter = 0
     unsolved_problems = Set(problems)
+
+    
     while !isempty(unsolved_problems) && (attempt_counter < max_number_of_attempts)
+        push!(experiment_results, [])
         attempt_counter += 1
         @info "Problems yet to solve on attempt $(attempt_counter): $(length(unsolved_problems))\n"
         @info "Best programs for attempt $(attempt_counter): $best_kept_programs\n"
@@ -72,20 +81,33 @@ function dream_coder_experiments(benchmark_name,
         # empty the list of best programs -- in this iterations we will be collecting new best programs.
         best_kept_programs = Vector{RuleNode}()
         # try to synthesize a program for all problems that are not solved yet
+        prob_count = 1
         for problem in unsolved_problems
-            @info "\nProblem #$(problem.name)"
-            println("\nProblem #$(problem.name)")            
+            @info "Problem #$prob_count, name: $(problem.name)"
+            println("Problem #$prob_count, name: $(problem.name)")            
             # synthesize until solving, or for a limited number of iterations. Then return best programs found so far
             synth_stats = synth_with_aux(problem, BFSIterator(grammar, ACTUAL_START),
                 grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
-            # synth_stats = synth_with_aux(problem, CostBasedBottomUpIterator(grammar, ACTUAL_START; current_costs=HerbSearch.get_costs(grammar)),
-            #     grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
+            
+            # programs_to_outputs(program) = [interpret(program, grammar, spec, new_rules_decoding) for spec in problem.spec]
+            
+            # synth_stats = synth_with_aux(problem, CostBasedBottomUpIterator(
+            #     grammar, 
+            #     ACTUAL_START; 
+            #     current_costs=HerbSearch.get_costs(grammar), 
+            #     program_to_outputs=programs_to_outputs),
+            # grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
             
             if synth_stats.score == 0
                 push!(best_kept_programs, synth_stats.programs[begin])
                 delete!(unsolved_problems, problem)
             end
+            push!(experiment_results[end], (prob_count, synth_stats.score, synth_stats.enumerations, synth_stats.time))
+            prob_count += 1
         end
+    end
+    for attempt_res in experiment_results
+        println(attempt_res)
     end
 end
 

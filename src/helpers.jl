@@ -161,7 +161,7 @@ function get_benchmark(benchmark_name::String)
     elseif benchmark_name == "karel"
         return HerbBenchmarks.Karel_2018
     else
-        return HerbBenchmarks.String_transformations_2020
+        return error("unknown benchmark name $benchmark_name")
     end
 end
 
