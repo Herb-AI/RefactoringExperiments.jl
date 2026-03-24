@@ -17,6 +17,9 @@ HerbSpecification = "6d54aada-062f-46d8-85cf-a1ceaf058a06"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
+[sources]
+HerbBenchmarks = {url = "https://github.com/Herb-AI/HerbBenchmarks.jl", rev = "karel"}
+
 [compat]
 Aqua = "0.8.14"
 Clingo_jll = "5.7.1"
@@ -26,6 +29,6 @@ Documenter = "1.16.1"
 HerbBenchmarks = "0.2.3"
 HerbConstraints = "1.1"
 HerbInterpret = "1.0.1"
-HerbSearch = "1.0.0"
-JSON = "0.21, 1"
+HerbSearch = "1"
+JSON = "0.21.4, 1"
 Test = "1.11.0"
