@@ -27,7 +27,6 @@ function parse_and_check_modes(what_to_run::AbstractString, benchmark_name::Abst
     return modes
 end
 
-
 function run_benchmark_comparison(
     benchmark_name,
     init_grammar::AbstractGrammar, problems::Vector{Problem},
@@ -98,9 +97,8 @@ function run_benchmark_comparison(
     return passed_tests
 end
 
-function experiment_main(benchmark_name::AbstractString,
-    max_depth::Int, max_iterations::Int, max_enumerations::Int;
-    what_to_run::AbstractString="regular")
+function run_aulile_compression_experiment(benchmark_name::AbstractString, max_depth::Int,
+    max_iterations::Int, max_enumerations::Int; what_to_run::AbstractString="regular")
 
     modes = parse_and_check_modes(what_to_run, benchmark_name)
     timestamp = Dates.format(now(), "yyyy-mm-dd_HH-MM-SS")
@@ -124,8 +122,7 @@ function experiment_main(benchmark_name::AbstractString,
             end
 
             passed_tests_per_mode = run_benchmark_comparison(benchmark_name, init_grammar,
-                problems, benchmark.interpret, :Start;
-                max_depth, max_iterations, max_enumerations, modes)
+                problems, benchmark.interpret, :Start; max_depth, max_iterations, max_enumerations, modes)
 
             for (mode_idx, mode) in enumerate(modes)
                 print(mode)
