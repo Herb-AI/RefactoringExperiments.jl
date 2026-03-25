@@ -13,7 +13,3 @@ function get_benchmark(benchmark_name::String)
         return error("unknown benchmark name $benchmark_name")
     end
 end
-
-function get_start_symbol(benchmark_name::String)
-    return :Start
-end
