@@ -123,8 +123,6 @@ function run_dream_coder_experiment(benchmark_name::AbstractString, max_iteratio
     aux_tag::AbstractString="default", max_number_of_attempts::Int, use_compression::Bool, compression_timeout::Int=120)
 
     modes = parse_and_check_modes(aux_tag, benchmark_name)
-    timestamp = Dates.format(now(), "yyyy-mm-dd_HH-MM-SS")
-    dir_path = pkgdir(@__MODULE__)
 
     benchmark = get_benchmark(benchmark_name)
     if benchmark_name == "karel"

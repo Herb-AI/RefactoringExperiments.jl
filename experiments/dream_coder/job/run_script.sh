@@ -17,4 +17,4 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 cd "$REPO_ROOT"
 
 # Activate this Julia project and run the uncommented DreamCoder test call.
-julia --project=. -e "using Pkg; Pkg.activate(\".\"); using RefactoringExperiments; run_dream_coder_experiment(\"$EXPERIMENT_NAME\", 1000000, aux_tag=\"default\", max_number_of_attempts=50, use_compression=$USE_COMPRESSION, compression_timeout=120)"
+julia --project=. -e "using Pkg; Pkg.activate(\".\"); using RefactoringExperiments; run_dream_coder_experiment(\"$EXPERIMENT_NAME\", 1000000, aux_tag=\"aulile_default\", max_number_of_attempts=50, use_compression=$USE_COMPRESSION, compression_timeout=120)"
