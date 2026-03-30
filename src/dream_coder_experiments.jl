@@ -125,27 +125,18 @@ function run_dream_coder_experiment(benchmark_name::AbstractString, max_iteratio
     modes = parse_and_check_modes(aux_tag, benchmark_name)
     timestamp = Dates.format(now(), "yyyy-mm-dd_HH-MM-SS")
     dir_path = pkgdir(@__MODULE__)
-    res_path = joinpath(dir_path, "experiments", "dream_coder", "comparison_results")
-    mkpath(res_path)
-    res_file_name = "$(benchmark_name)_$(max_iterations)_$(timestamp).txt"
-    res_file_path = joinpath(res_path, res_file_name)
 
-    # open results file and redirect STDIO
-    open(res_file_path, "w") do io
-        redirect_stdout(io) do
-            benchmark = get_benchmark(benchmark_name)
-            if benchmark_name == "karel"
-                problems = HerbBenchmarks.Karel_2018.get_all_problems()
-                init_grammar = HerbBenchmarks.Karel_2018.grammar_karel
-            else
-                problems = get_all_problems(benchmark)
-                init_grammar = get_default_grammar(benchmark)
-            end
-            dream_coder_experiments(benchmark_name, init_grammar, problems, 
-                benchmark.interpret; max_iterations=max_iterations,
-                mode=only(modes), max_number_of_attempts=max_number_of_attempts, do_compression=use_compression, compression_timeout=compression_timeout)
-        println()
-        end
-        
+    benchmark = get_benchmark(benchmark_name)
+    if benchmark_name == "karel"
+        problems = HerbBenchmarks.Karel_2018.get_all_problems()
+        init_grammar = HerbBenchmarks.Karel_2018.grammar_karel
+    else
+        problems = get_all_problems(benchmark)
+        init_grammar = get_default_grammar(benchmark)
     end
+    dream_coder_experiments(benchmark_name, init_grammar, problems, 
+        benchmark.interpret; max_iterations=max_iterations,
+        mode=only(modes), max_number_of_attempts=max_number_of_attempts, do_compression=use_compression, compression_timeout=compression_timeout)
+println()
+
 end
