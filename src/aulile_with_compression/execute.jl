@@ -1,27 +1,12 @@
-# using HerbCore, HerbSearch, HerbGrammar, HerbBenchmarks, HerbSpecification
-# using Clingo_jll, JSON
+using Pkg
+Pkg.activate(joinpath(@__DIR__, ".."))
 
-# benchmark = HerbBenchmarks.Karel_2018
+using Clingo_jll, JSON
+using RefactoringExperiments
 
-# aulile_with_compression(
-#     benchmark_name = "Karel",
-#     problems = benchmark.get_all_problems(),
-#     grammar  = benchmark.grammar_karel,
-#     starting_symbol = :Block,
-#     aulile_parameters = AulileOptions(
-#             max_iterations        = 3,
-#             max_depth             = 4,
-#             restart_iterator      = true,
-#         synth_opts = SynthOptions(
-#             num_returned_programs = 10,
-#             max_enumerations      = 1000,
-#             # max_time              = 1,
-#             print_debug           = false,
-#             eval_opts = EvaluateOptions(
-#             aux                     = default_aux,
-#             interpret               = benchmark.interpret,
-#             allow_evaluation_errors = false
-#             ),
-#         ),
-#     ),
-# )
+if length(ARGS) >= 5
+    run_aulile_compression_experiment(ARGS[1], parse(Int, ARGS[2]), parse(Int, ARGS[3]), parse(Int, ARGS[4]),
+        what_to_run=ARGS[5])
+else
+    run_aulile_compression_experiment(ARGS[1], parse(Int, ARGS[2]), parse(Int, ARGS[3]), parse(Int, ARGS[4]))
+end

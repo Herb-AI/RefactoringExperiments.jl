@@ -19,6 +19,8 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [sources]
 HerbBenchmarks = {url = "https://github.com/Herb-AI/HerbBenchmarks.jl", rev = "karel"}
+HerbConstraints = {url = "https://github.com/Herb-AI/HerbConstraints.jl", rev = "aulile_constainsany"}
+HerbSearch = {url = "https://github.com/Herb-AI/HerbSearch.jl", rev = "124-Aulile"}
 
 [compat]
 Aqua = "0.8.14"

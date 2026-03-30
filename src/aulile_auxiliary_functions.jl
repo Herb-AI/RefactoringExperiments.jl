@@ -219,20 +219,26 @@ const AUX_FUNCTIONS = Dict(
         "aulile_penalize_deleting_2" => construct_aux_function((a, b) ->
                 levenshtein_with_uppercase!(a.str, b.str, Inf, 1, 1),
             HerbBenchmarks.String_transformations_2020.StringState),
-        "default" => default_aux
-    ), "robots" => Dict(
+        "aulile_default" => default_aux
+    ),
+    "robots" => Dict(
         "aulile_all_steps_manhattan" => construct_aux_function(robot_all_steps_dist,
             HerbBenchmarks.Robots_2020.RobotState),
         "aulile_simple_manhattan" => construct_aux_function(robot_simple_dist,
             HerbBenchmarks.Robots_2020.RobotState),
-        "default" => default_aux
-    ), "pixels" => Dict(
+        "aulile_default" => default_aux
+    ),
+    "pixels" => Dict(
         "aulile_edit_distance" => construct_aux_function(pixel_edit_dist,
             HerbBenchmarks.Pixels_2020.PixelState),
-        "default" => default_aux
-    ), "karel" => Dict(
+        "aulile_default" => default_aux
+    ),
+    "karel" => Dict(
         "aulile_edit_distance" => construct_aux_function(karel_edit_dist,
             HerbBenchmarks.Karel_2018.KarelState),
-        "default" => default_aux
+        "aulile_default" => default_aux
     ),
+    "bitvectors" => Dict(
+        "aulile_default" => default_aux
+    )
 )
