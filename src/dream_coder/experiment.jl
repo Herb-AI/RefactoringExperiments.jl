@@ -86,17 +86,16 @@ function dream_coder_experiments(benchmark_name,
             @info "Problem #$prob_count, name: $(problem.name)"
             println("Problem #$prob_count, name: $(problem.name)")            
             # synthesize until solving, or for a limited number of iterations. Then return best programs found so far
-            synth_stats = synth_with_aux(problem, BFSIterator(grammar, ACTUAL_START),
-                grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
+            # iter = BFSIterator(grammar, ACTUAL_START)
             
-            # programs_to_outputs(program) = [interpret(program, grammar, spec, new_rules_decoding) for spec in problem.spec]
-            
-            # synth_stats = synth_with_aux(problem, CostBasedBottomUpIterator(
-            #     grammar, 
-            #     ACTUAL_START; 
-            #     current_costs=HerbSearch.get_costs(grammar), 
-            #     program_to_outputs=programs_to_outputs),
-            # grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
+            programs_to_outputs(program) = [interpret(program, grammar, spec, new_rules_decoding) for spec in problem.spec]
+            iter = CostBasedBottomUpIterator(
+                grammar, 
+                ACTUAL_START; 
+                current_costs=HerbSearch.get_costs(grammar), 
+                program_to_outputs=programs_to_outputs)
+            synth_stats = synth_with_aux(problem, iter,
+            grammar, typemax(Int), new_rules_decoding=new_rules_decoding, opts=opts)
             
             if synth_stats.score == 0
                 push!(best_kept_programs, synth_stats.programs[begin])
