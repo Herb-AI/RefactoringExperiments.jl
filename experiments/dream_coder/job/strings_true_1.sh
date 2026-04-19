@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=strings-compression=true
 #SBATCH --partition=compute
-#SBATCH --time=01:00:00
+#SBATCH --time=20:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=3968MB
