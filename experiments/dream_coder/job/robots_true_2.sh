@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=karel-compression=true
+#SBATCH --job-name=robots-compression=true
 #SBATCH --partition=compute
 #SBATCH --time=01:00:00
 #SBATCH --ntasks=1
@@ -11,4 +11,4 @@
 module load julia
 
 set -euo pipefail
-srun run_script.sh "karel" "true"
+srun run_script.sh "robots" "true" 2

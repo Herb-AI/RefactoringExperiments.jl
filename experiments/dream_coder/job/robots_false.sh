@@ -11,4 +11,4 @@
 module load julia
 
 set -euo pipefail
-srun run_script.sh "robots" "false"
+srun run_script.sh "robots" "false" 0

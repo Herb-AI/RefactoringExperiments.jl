@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=pixels-compression=false
+#SBATCH --job-name=pixels-compression=true
 #SBATCH --partition=compute
 #SBATCH --time=01:00:00
 #SBATCH --ntasks=1
@@ -11,4 +11,4 @@
 module load julia
 
 set -euo pipefail
-srun run_script.sh "pixels" "false" 0
+srun run_script.sh "pixels" "true" 2
