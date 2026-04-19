@@ -119,7 +119,7 @@ function get_actual_start(grammar)
 end
 
 function run_dream_coder_experiment(benchmark_name::AbstractString, max_iterations::Int;
-    aux_tag::AbstractString="default", max_number_of_attempts::Int, use_compression::Bool, compression_timeout::Int=120)
+    aux_tag::AbstractString="default", max_number_of_attempts::Int, use_compression::Bool, compression_timeout::Int=120, k::Int)
 
     modes = parse_and_check_modes(aux_tag, benchmark_name)
 
@@ -133,7 +133,7 @@ function run_dream_coder_experiment(benchmark_name::AbstractString, max_iteratio
     end
     dream_coder_experiments(benchmark_name, init_grammar, problems, 
         benchmark.interpret; max_iterations=max_iterations,
-        mode=only(modes), max_number_of_attempts=max_number_of_attempts, do_compression=use_compression, compression_timeout=compression_timeout)
+        mode=only(modes), max_number_of_attempts=max_number_of_attempts, do_compression=use_compression, compression_timeout=compression_timeout, compression_k=k)
 println()
 
 end
