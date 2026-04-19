@@ -11,4 +11,4 @@
 module load julia
 
 set -euo pipefail
-srun run_script.sh "pixels" "true" 3
+srun --unbuffered run_script.sh "pixels" "true" 3
