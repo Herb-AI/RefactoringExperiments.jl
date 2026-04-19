@@ -1,6 +1,6 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.12.5"
+julia_version = "1.12.6"
 manifest_format = "2.0"
 project_hash = "2eb97ea85a72cca70ca1d7f93101174821ff0c77"
 
@@ -160,8 +160,8 @@ uuid = "f8c6e375-362e-5223-8a59-34ff63f689eb"
 version = "2.53.0+0"
 
 [[deps.HerbBenchmarks]]
-deps = ["HerbCore", "HerbGrammar", "HerbSpecification", "JSON", "MLStyle", "NPZ", "ParserCombinator", "Random"]
-git-tree-sha1 = "29809972ab076d74a53f87476e9a809439887448"
+deps = ["DocStringExtensions", "HerbCore", "HerbGrammar", "HerbSpecification", "JSON", "MLStyle", "NPZ", "ParserCombinator", "Random"]
+git-tree-sha1 = "cdd3effc8bee40e647989b5a86fbc82939cf7910"
 repo-rev = "karel"
 repo-url = "https://github.com/Herb-AI/HerbBenchmarks.jl"
 uuid = "eadf8b74-d38a-4b1a-a063-8d36e493d376"
@@ -169,7 +169,9 @@ version = "0.2.3"
 
 [[deps.HerbConstraints]]
 deps = ["DataStructures", "DocStringExtensions", "HerbCore", "HerbGrammar", "MLStyle", "TimerOutputs"]
-git-tree-sha1 = "1d4044955c5ccbb106d10791015c3226d535a6b0"
+git-tree-sha1 = "0668bd4f7c77f1744fdea1b55ca2b6a7e701c38f"
+repo-rev = "aulile_containsany"
+repo-url = "https://github.com/Herb-AI/HerbConstraints.jl.git"
 uuid = "1fa96474-3206-4513-b4fa-23913f296dfc"
 version = "1.2.0"
 weakdeps = ["Clingo_jll"]
@@ -199,7 +201,7 @@ version = "1.0.1"
 deps = ["DataStructures", "DocStringExtensions", "HerbConstraints", "HerbCore", "HerbGrammar", "HerbInterpret", "HerbSpecification", "MLStyle", "Random", "StatsBase", "TimerOutputs"]
 git-tree-sha1 = "4a1c5d459c5ff164a1e31722df20c04b6e40e63c"
 repo-rev = "124-Aulile"
-repo-url = "https://github.com/Herb-AI/HerbSearch.jl.git"
+repo-url = "https://github.com/Herb-AI/HerbSearch.jl"
 uuid = "3008d8e8-f9aa-438a-92ed-26e9c7b4829f"
 version = "1.0.0"
 weakdeps = ["Clingo_jll", "DecisionTree", "JSON"]
