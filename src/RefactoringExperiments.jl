@@ -14,14 +14,16 @@ using HerbBenchmarks
 
 using Dates
 
+include("res_writer.jl")
+
 include("herb_patches.jl")
 include("herb_core_patches.jl")
 
 include("helpers.jl")
 include("aulile_auxiliary_functions.jl")
 
-include("aulile_with_compression/experiment.jl")
-include("dream_coder/experiment.jl")
+include("aulile_with_compression/experiment_awc.jl")
+include("dream_coder/experiment_dc.jl")
 
 export
     get_benchmark,
