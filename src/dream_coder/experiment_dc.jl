@@ -1,10 +1,3 @@
-# struct CompressionSettings
-#     compress::Bool
-#     k::Int
-#     time_limit::Int
-#     max_compression_nodes::Int
-# end
-
 
 
 function dream_coder_experiments(benchmark_name::AbstractString,
@@ -95,7 +88,7 @@ function get_actual_start(grammar)
     if grammar.types[1] == :Start
         return grammar.rules[1]
     else
-        @error "Where's the start in your grammar?"
+        @error "\":Start\" in the grammar is expected at the first position."
     end
 end
 
