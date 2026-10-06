@@ -101,12 +101,13 @@ function run_aulile_compression_experiment(benchmark_name::AbstractString, max_d
     max_iterations::Int, max_enumerations::Int; what_to_run::AbstractString="regular")
 
     modes = parse_and_check_modes(what_to_run, benchmark_name)
-    timestamp = Dates.format(now(), "yyyy-mm-dd_HH-MM-SS")
 
-    res_path = joinpath(pkgdir(@__MODULE__), "experiments", "aulile", "comparison_results")
+    res_path = joinpath(pkgdir(@__MODULE__), "experiments", "job_out")
     mkpath(res_path)
     res_file_name = "$(benchmark_name)_$(max_depth)_$(max_iterations)_$(max_enumerations)_$(timestamp).txt"
     res_file_path = joinpath(res_path, res_file_name)
+
+    writer = init_write(benchmark_name)
 
     # open results file and redirect STDIO
     open(res_file_path, "w") do io
